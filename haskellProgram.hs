@@ -210,8 +210,88 @@ insere_ordenado e (x:xs)
 	| otherwise = x : insere_ordenado e xs
 
 
--- Funcoes de ordem superior: simplificam bastante funcoes que usam recursao
+-- Funcoes de ordem superior: quando possui ao menos um argumento que eh uma funcao ou um resultado que eh uma funcao
+-- elas simplificam bastante funcoes que usam recursao
 -- Maioria de funcoes de recursao sobre listas podem ser reescritas usando funcoes de ordem superior
+duas_vezes :: (a -> a) -> a -> a -- entrada: funcao que recebe um valor e retorna outro valor
+duas_vezes f x = f (f x) -- aplica a funcao duas vezes sobre o valor x (parenteses para garantir que ele faca a operacao de dentro primeiro depois aplique a f ao resultado)
+-- primeiro argumento eh uma funcao que mapeia um valor a em outro valor do tipo a
+-- segundo argumento eh uma variavel do tipo generico
+-- saida tbm eh uma variavel de tipo generico
+-- nao especifica/ limita tipo a em Num (numerico) ou String ou qualquer outra classe
+-- eh um 'a' qualquer: ideia eh que essa funcao se aplique a elementos de qualquer tipo
+
+-- a funcao "duas_vezes" pode ser aplicada a qualquer funcao de um argumento que a saida seja a mesma do argumento de entrada
+dobro :: Num a => a -> a
+dobro x = x * 2
+
+metade :: Float -> Float
+metade x = x / 2
+
+-- Usar a funcao "duas_vezes" usando como entrada a funcao "dobro" e "metade" acima
+-- dobro (dobro 3)
+-- duas_vezes dobro 3: aplicacao duas vezes da funcao dobro
+-- metadde (metade 8)
+-- duas_vezes metade 8
+
+-- Funcoes de ordem superior:
+-- permitem definir padroes de computacao que podem ser reutilizados
+-- facilita definicao de funcoes genericas
+
+-- muitas dessas funcoes sao aplicadas em listas
+-- funcoes genericas sobre listas aplicam alguma regra geral sobre os elementos da lista
+-- Existem 3 funcoes basicas em haskell que usam: mapeamento, filtragem, reducao
+
+
+
 -- Funcao de mapeamento
--- funcao de ordem superior: quando possui ao menos um argumento que eh uma funcao ou um resultado que eh uma funcao
 -- Mapeamento: aplicar uma funcao a cada um dos elementos da lista e cria uma nova lista modificada de mesmo comprimento
+
+
+-- Dobrar uma lista de elementos
+dobrar :: Num a => [a] -> [a] -- Num: tanto faz se eh inteiro ou real
+dobrar [] = []
+dobrar (x:xs) = (x*2) : dobro xs
+
+-- Incrementar os elementos de uma lista
+incrementar :: [Int] -> [Int]
+incrementar [] = []
+incrementar (x:xs) = (x+1) : incrementar xs -- incrementa a cabeca da lista e recursivament a cauda
+
+-- funcao de mapeamento deve receber os seguintes parametros
+-- 1) uma funcao de transformacao
+-- 2) Uma lista de elementos a ser transformada
+-- Utilizaremos a funcao map
+
+-- map ja existe no preludio padrao da linguagem, mas mostramos abaixo como ela poderia ser implementada
+-- usamos uma funcao geral, uma funcao generica de entrada
+-- map se aplica sobre listas, porem a funcao usada no map eh usada em cada elemento
+-- a funcao map aplica a funcao f a toda a lista de maneira recursiva
+map :: (a -> b) -> [a] -> [b]
+map f [] = []
+map f (x:xs) = f x : map f xs
+
+
+-- Versao das funcoes dobrar e incrementar, agora usando map
+-- Agora o map que vai executar o caso base 
+
+-- a funcao eh o operador * e o argumento dela eh 2
+-- vai aplica em cada elemento da lista 1 -> que eh igual a (x:xs)
+dobrar_map :: Num a => [a] -> [a]
+dobrar_map 1 = map (*2) 1
+
+-- pŕimeiro argumento: (+1)
+-- segundo argumento: 1
+incrementar_map :: [Int] -> [Int]
+incrementar_map 1 = map (+1) 1
+
+
+-- Exemplos aplicaveis diretamente no terminal
+-- map (+7) [1,2,3]
+-- map (even) [1,2,3,4]
+-- map ("Sr." ++) ["joao", "Pedro", "Luiz"]
+
+-- [Int] -> [Int]
+-- [Int] -> [Bool]
+-- operador ++ de concatenacao de strings
+-- [String] -> [Sting]
