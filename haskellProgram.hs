@@ -202,8 +202,16 @@ n_esimo' n (_:xs) = n_esimo (n-1) xs -- nao importa quem eh a cabeca
 -- Funcao de inserir ordenado
 -- Classe Ord: comparacao de inteiros de maior e menor que a classe Eq nao permite esse tipo de comparacao
 -- a -> [a] -> [a]: lista generica
+-- usar : para inserir na cabeca da lista
 insere_ordenado :: Ord a => a -> [a] -> [a]
 insere_ordenado e [] = [e]
 insere_ordenado e (x:xs)
 	| e < x = e : (x:xs)
 	| otherwise = x : insere_ordenado e xs
+
+
+-- Funcoes de ordem superior: simplificam bastante funcoes que usam recursao
+-- Maioria de funcoes de recursao sobre listas podem ser reescritas usando funcoes de ordem superior
+-- Funcao de mapeamento
+-- funcao de ordem superior: quando possui ao menos um argumento que eh uma funcao ou um resultado que eh uma funcao
+-- Mapeamento: aplicar uma funcao a cada um dos elementos da lista e cria uma nova lista modificada de mesmo comprimento
