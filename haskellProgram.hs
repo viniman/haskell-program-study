@@ -1,6 +1,9 @@
 -- HASKELL: GHCI
 -- :reload
 
+-- filtragem: isDigit, isAlpha
+import Data.Char
+
 -- Funcao original
 dobro :: Integer -> Integer
 dobro x = 2 * x
@@ -222,8 +225,8 @@ duas_vezes f x = f (f x) -- aplica a funcao duas vezes sobre o valor x (parentes
 -- eh um 'a' qualquer: ideia eh que essa funcao se aplique a elementos de qualquer tipo
 
 -- a funcao "duas_vezes" pode ser aplicada a qualquer funcao de um argumento que a saida seja a mesma do argumento de entrada
-dobro :: Num a => a -> a
-dobro x = x * 2
+dobro' :: Num a => a -> a
+dobro' x = x * 2
 
 metade :: Float -> Float
 metade x = x / 2
@@ -267,9 +270,9 @@ incrementar (x:xs) = (x+1) : incrementar xs -- incrementa a cabeca da lista e re
 -- usamos uma funcao geral, uma funcao generica de entrada
 -- map se aplica sobre listas, porem a funcao usada no map eh usada em cada elemento
 -- a funcao map aplica a funcao f a toda a lista de maneira recursiva
-map :: (a -> b) -> [a] -> [b]
-map f [] = []
-map f (x:xs) = f x : map f xs
+map_myself :: (a -> b) -> [a] -> [b]
+map_myself f [] = []
+map_myself f (x:xs) = f x : map f xs
 
 
 -- Versao das funcoes dobrar e incrementar, agora usando map
@@ -295,3 +298,45 @@ incrementar_map 1 = map (+1) 1
 -- [Int] -> [Bool]
 -- operador ++ de concatenacao de strings
 -- [String] -> [Sting]
+
+
+
+-- Filtragem
+
+
+-- se cada caractere eh alfabetico, ele eh separado para conter uma nova string
+-- separar elementos: os que passam pelo filtro eh os que quero preservar
+pega_letras :: String -> String
+pega_letras [] = []
+pega_letras
+	| isAlpha x = x : pega_letras xs
+	| otherwise = pega_letras xs
+
+pega_digitos :: String -> String
+pega_digitos [] = []
+pega_digitos (x:xs)
+	| isDigit x = x : pega_digitos xs
+	| otherwise = pega_digitos xs
+
+
+-- funcao filter: seleciona os elementos de uma lista que satisfaz um predicado
+-- ou seja, uma funcao (condicao) cujo valor de saida eh do tipo logico
+filter_myself :: (a -> Bool) -> [a] -> [a]
+filter_myself p [] = []
+filter_myself p (x:xs)
+	| p x = x : filter p xs
+	| otherwise = filter p xs
+
+
+-- podemos definir as funcoes anteriores usando filter:
+pega_letras' :: String -> String
+pega_letras' xs = filter isAlpha xs
+
+pega_digitos' :: String -> String
+pega_digitos' xs = filter isDigit xs
+
+-- mais exemplos:
+-- filter (>0) [1,0,-1,2,-3]
+-- filter (even) [1..10] - even: par ou impar (True para par)
+-- filter (/='a') "haskell"
+
