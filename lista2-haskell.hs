@@ -1,0 +1,1 @@
+-- Lista 2 - Linguagem de Programação - Programação Funcional - Haskell
