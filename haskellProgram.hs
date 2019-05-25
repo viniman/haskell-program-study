@@ -23,6 +23,11 @@ triplo x = dobro (dobro (dobro x))
 soma :: (Integer, Integer) -> Integer
 soma (x, y) = x + y
 
+-- casamento de padrao
+-- sequencialmente ver em quem ele se encaixa
+soma' :: Integer -> Integer -> Integer
+soma' x y = x + y -- casamento de padrao <-
+
 conta_ate :: Integer -> [Integer]
 conta_ate n = [0..n]
 
