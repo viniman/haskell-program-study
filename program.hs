@@ -320,6 +320,8 @@ quickSort (x:xs) =
 
 
 -- Funcoes de ordem superior
+-- Funcoes que podem ser usadas como parametros e ser retornadas de uma funcao
+
 
 
 ----------------------------------------------------
