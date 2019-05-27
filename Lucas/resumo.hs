@@ -11,6 +11,11 @@
 --	Comparativos: "==" igualdade, "/=" diferente, "&&" 'e' lógico, "||" 'ou' lógico, "not" 'não'(Inverte o operador)
 --	Tipos de dados: Integer(é diferente de Int), Float, Double, Char, Boolean
 
+--	Tipo 'Num' é referente a um número, independente se é Float, Int, Double. Ideal para funções que trabalham com números
+--	independente da precisão
+--	Tipo 'Eq' em funções, remete a uma comparação seja numerica, caracteres ou strings, é uma comparação de tipo genérico
+--	Tipo 'Ord' em funções, remete a comparação de ordem, independente do tipo do dado
+
 --	You can also define functions that have no letters! This lets
 --	É possível definir o próprio operador de função
 --	integer division
@@ -24,14 +29,71 @@
 --	Usando expressões anônimas !
 --	listaSomaUm' lst = map (\x -> x + 1) lst
 
+--	OPERADORES IMPORTANTES:
 
---	READ: String -> Float     Converte uma string representando um valor real(Float)
---	SHOW: Float -> String     Converte um número para uma string
+--	1) read:
+--		Converte uma string para um tipo especificado.
+--	Read a => String -> a
+--	read: String -> Float     
+--	Exemplo:
+--		read "12"::Int => 12
+--		read "12"::Double => 12.0
+--		read "True"::Bool => True
+--		
 
+--	2) show:
+--		Converte o argumento para string.
+--	show a => a -> String
+--	show: Float -> String
+--	Exemplo:
+--		show 12 => "12"
+--		show True => "True"
+--		show [1,2,3] => "[1,2,3]"
+--		show (zip [1,2,3] [5,4,3]) => "[(1,5),(2,4),(3,3)]"
+
+--	3) map:
+--		Executa a operação passada no parâmetro na lista
+--	(a -> b) -> [a] -> [b]
+--	map (operacao) lista:	  
+--	Exemplo:
+--		map (+2) [1..5] => [3,4,5,6,7]
+--		map (show) [1,3,5,6,7] => ["1","3","5","6","7"]			   --	Transforma uma lista numerica em uma lista de strings
+--		map abs [-1,-3,4,-12] => [1,2,3,4,12]					   --	Transforma a lista em elementos positivos
+--		map reverse ["abc","cda","1234"] => ["cba","adc","4321"]   --	Inverte as strings da lista
+
+--	4) filter:
+--		Filtra uma lista a partir de condição estabelecida.
+--		(a -> Bool) -> [a] -> [a]	
+--	Exemplo:
+--		filter (>5) [1,2,3,4,5,6,7,8] => [6,7,8]            --	Todos os números maiores 
+--		filter (<0) [-2,-1,0,1,2,3,4] => [-2,-1]            --	Todos os números negativos
+--		filter (/='C') "Casa" => "asa"                      --	Todos os caracteres diferentes de 'C'
+--		filter odd [3,6,7,9,12,14] => [3,7,9]				--	Todos os elementos ímpares
+
+--	5) foldl:
+--				
+--	Exemplo:
+--		foldl (+) 0 [4,2,4] => 10		--	0+4+2+4 = 10
+--		foldl (/) 64 [4,2,4] => 2.0		--	64/4 = 16, 16/2 = 8, 8/4 = 2.0
+--		foldl max 5 [1,2,3,4] => 5		--	max 5 1 = 5, max 5 2 = 5, max 5 3 = 5, max 5 4 = 5 => 5
+--		foldl max 5 [4,5,6,7] => 7		--	max 5 4 = 5, max 5 5 = 5, max 5 6 = 6, max 6 7 = 7 => 7
+
+--	6) foldr:
+--		
+--	Exemplo:
+--		foldr (/) 64 [4,2,4]  => 0.125	--	4/64 = 0.0625, 2/0,0625 = 32, 4/32 = 0.125 
+--		foldr (/) 64 [4,2]    => 2/64   --	2/64 = 0.03125‬, 4/0.03125‬ = 128.0 
+--		foldr (+) 5 [1,2,3,4] => 15     --	5+4 = 9, 9+3 = 12, 12+2 = 14, 14+1 = 15
+--		foldr (/) 2 [8,12,24,4]	=>      --	4/2 = 2, 24/2 = 12, 12/12 = 1, 8/1 = 8.0
+
+--	7) sum:
+--		Soma os elementos de uma lista
+--	Exemplo:
+--		sum [1..5] => 15
 
 --	OPERAÇÕES BASICAS
 --	Soma:
-soma :: (Float, Float) -> Float            --Definição da função => Entra dois valores em Float e retorna um valor em Float
+soma :: (Float, Float) -> Float            --	Definição da função => Entra dois valores em Float e retorna um valor em Float
 soma(x,y) = x + y
 
 --	Subtração:
@@ -93,7 +155,8 @@ raiz2 x y = x**(1/y)
 --	[1..] !! 999 => 1000							Retorna o elemento 999 da lista infinita
 --	'A':" small cat"	=>	"A small cat"
 
---	Operações com listas:
+--	OPERAÇÕES COM LISTAS:
+--	head, tail, init, last, null, length, reverse, take, drop;
 
 --	[1..5] ++ [6..10] => [1,2,3,4,5,6,7,8,9,10]		Juntando duas listas
 --	0:[1..5] => [0, 1, 2, 3, 4, 5]					Adiciona elemento na cabeça da lista
@@ -101,6 +164,7 @@ raiz2 x y = x**(1/y)
 --	tail [1..5] => [2, 3, 4, 5]						Cauda da lista
 --	init [1..5] => [1, 2, 3, 4]						Inicio da lista
 --	last [1..5] => 5								Último elemento da lista
+--	null [1..5] => False							Retorna se a lista é vazia
 --	length [1..5] => 5								Mede o tamanho da lista
 --	length "Casa" => 4
 --	reverse "Casa" => "asaC"						Inverte uma lista

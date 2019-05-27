@@ -39,7 +39,29 @@ intersp x (y:ys) = if (length ys) /= 0 then y : x : intersp x ys else y:ys -- Se
 --	c) Implementando o mixHalf
 -- que dada uma lista, produz um par de listas onde ambas possuem metade dos elementos da lista original. 
 -- Se a lista possuir tamanho ımpar, entao uma das listas tera um elemento a mais que a outra
---mixHalf :: [a] -> ([a], [a])
---mixHalf [] = [] --	Caso base: Lista vazia
---mixHalf (x:xs) = if ((length (x:xs))`mod` 2) == 0 then (fst(y:ys,z:zs)) mixHalf (xs) else (_, x:_) mixHalf (xs)
+-- mixHalf :: [a] -> ([a], [a])
+-- mixHalf [] = [] --	Caso base: Lista vazia
+-- mixHalf (x:xs)
+        -- if(length (x:xs) /= 0)
+        -- then if ((length (x:xs) `mod` 2) == 0) then x:ys, mixHalf (xs) 
+        -- else x:zs , mixHalf (xs) 
+        -- else unzip(zip y:ys z:zs)
 
+--	Exercicio 3:
+
+
+--	Exercicio 4:
+--foldr (operacao) valor lista
+--map :: (a -> b) -> [a] -> [b]		--padrao
+--map' :: 
+
+--	Exercicio 5:
+--dec2int [2,3,4,5] = 2345
+dec2int :: [Int] -> Int
+dec2int [] = 0
+dec2int list = foldl (\x y -> x*10+y) 0 list
+
+
+--	Exercicio 10:
+--	a) int2bit
+data Bit = 1 | 0
