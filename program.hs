@@ -311,12 +311,12 @@ elem' a (x:xs)
 	| x == a = True
 	| otherwise = elem' a xs
 
-quickSort :: (Ord a) => [a] -> [a]
-quickSort [] = []
-quickSort (x:xs) =
-	let smallerSorted = quickSort [a | a <- xs, a <= x]
-		biggerSorted = quickSort [a | a <- xs, a > x]
-	in smallerSorted ++ [x] ++ biggerSorted
+quickSort :: (Ord a) => [a] -> [a]  
+quickSort [] = []  
+quickSort (x:xs) =   
+    let smallerSorted = quickSort [a | a <- xs, a <= x]  
+        biggerSorted = quickSort [a | a <- xs, a > x]  
+    in  smallerSorted ++ [x] ++ biggerSorted 
 
 
 -- Funcoes de ordem superior
@@ -333,8 +333,9 @@ calcCirc r = pi * r^2
 
 
 
---ehPrimo :: Int -> String
---ehPrimo x
+-- ehPrimo :: Int -> String
+-- ehPrimo x
+-- 	| x / 
 
 whatNumeric :: Int -> Int
 whatNumeric num
@@ -348,13 +349,13 @@ whatNumeric' num
 	| num < 0 = -1
 	| otherwise = 0
 
-operations :: Char -> Integer -> Integer -> Integer
+operations ::  Char -> Integer -> Integer -> Integer
 operations op n1 n2
 	| op == '*' = n1*n2
  	| op == '/' = n1*n2
  	| op == '-' = n1-n2
  	| op == '+' = n1+n2
- 	| otherwise = 0
+ 	| otherwise = error "ERRO: esta funcao nao esta implementada!"
 
 
 -- operations' :: (Eq op) => Char -> Integer -> Integer -> Float
@@ -374,3 +375,36 @@ operations op n1 n2
    fold(l||r) <funcao> <valor inicial> <lista>
 -}
 
+
+
+and' :: Bool -> Bool -> Bool
+and' True True = True
+and' _ _ = False
+
+or' :: Bool -> Bool -> Bool
+or' False False = False
+or' _ _ = True
+
+or_exclusive :: Bool -> Bool -> Bool
+or_exclusive True False = True
+or_exclusive False True = True
+or_exclusive _ _ = False
+
+pertence :: (Eq a) => [a] -> a -> Bool
+pertence [] _ = False
+pertence (x:xs) n
+	| x == n = True
+	| otherwise = pertence xs n 
+
+maior :: [Int] -> Int
+maior [x] = x
+maior (x:xs)
+	| x > maior xs = x
+	| otherwise = maior xs 
+
+todos_pares :: [Int] -> Bool
+todos_pares [] = False
+todos_pares [x] | (mod x 2 == 0) = True
+todos_pares (x:xs)
+	| (mod x 2 /= 0) = False
+	| otherwise = todos_pares xs
