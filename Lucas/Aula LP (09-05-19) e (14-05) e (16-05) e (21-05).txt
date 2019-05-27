@@ -1,0 +1,342 @@
++-------------------------------+
+|	Aula (09-05-19)		|
++-------------------------------+
+
+:t Circle
+Circle :: Float -> Float -> Float -> Shape
+Rectangle:: Floatr -> Float -> Float -> Shape
+area :: shape -> Float
+
+area (Circle _ _ r) = Pi * r^2
+
+area(Rectangle x1 y1 x2 y2) = abs((x2 - x1) * (y2 - y1))
+
+map (Circle 10 20)[4, 5, 6, 6]
+~[Circle 10 20 4, Circle 10 20 5, Circle 10 20 6, Circle 10 20 6] = l
+map area l
+
+data Time = Flamengo | Barcelona | Real
+data Pessoa = Pessoa String String Int Float String Time
+
+Acesso a dados:
+
+fname(Pessoa name _ _ _ _ _) = name
+lname(Pessoa _ lname _ _ _ _) = lname
+age(Pessoa _ _ a _ _ _) = a
+
+Problema: Identificar o nome do campo
+Solução:
+
+data Time = Flamengo | Barcelona | Real
+data Pessoa = Pessoa {fname::String, lname::String, 
+		age::Int, fone::String, time::Time}
+
+ou
+
+fname:: Pessoa ->String
+Pessoa{fname = "João", lname = "Silva"...,Time = Flamengo}
+type firstname = String		//Escrevendo por sinonimos
+
+
+=================================================================
+Definindo uma pilha:
+
+data Pilha = stack [int]
+push::int -> Pilha -> Pilha
+push x (stack xs) = stack(x:xs)	//Pra facilitar é notado que o topo é sempre o início
+pop::Pilha -> (Int, Pilha)
+pop (stack x:xs) = (x, stack xs)
+
+//Definindo uma pilha de um atributo diferente -- Tipos paramétricos
+//Pilha do tipo "a"
+data Pilha a = stack [a]
+push::a -> Pilha -> Pilha
+push x (stack xs) = stack(x:xs)	//Pra facilitar é notado que o topo é sempre o início
+pop::Pilha -> Maybe (a, Pilha)		//Tratando erros
+pop (stack x:xs) = Just (x, stack xs)
+pop (stack []) = Nothing		//Tratando erro de pilha vazia e não pode remover
+
+==========================================================================
+
+
+Tipos recursivos - "Como tratar uma árvore binária?!?"
+
+data Tree a = Node a (Tree a) (Tree a)		//Define a arvore e as subárvores dela
+	      | Empty						///	5
+Node x (Node 1 Empty Empty) (Node 3 Empty Empty)		///   1	  3
+
+//Busca em arvore binaria
+
+Search E Empty = false
+Search E (Node x t1 t2)
+ | E == X = True
+ | E < X = Search E t1
+ | otherwise = Search E tw
+
+//Inserção em arvore binaria de busca
+
+insert e Empty = Node e Empty Empty	//Caso da Arvore vazia
+insert e (Node x t1 t2)
+ | e < x = Node x (insert e t1) t2
+ | otherwise = Node x t1 (insert e t2)
+
+===========================================================================
+Qual o resultado desta operação?
+foldr insert Empty[5,1,4,2,3]
+
+insert 5 (foldr insert Empty [1,4,2,3])
+~ insert 5 (insert 1 (foldr insert Empty [1,2,3]))
+	.
+	.
+	.
+     3
+    / \
+   2   4
+  /     \
+ 1       5
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
++-------------------------------+
+|	Aula (14-05-2019)	|
++-------------------------------+
+
+Polimorfismo paramétrico:
+f1::a -> a
+f1 x = x			//Função identidade
+
+f2:: (a -> a) -> a -> a
+f2 f x = f x			//Outra possibilidade 	= f (f x)
+
+f3:: a -> b
+f3 x = x
+
+data Maybe a = Nothing | Just a			//Maybe é usado para fazer propagação de erros
+
+funções polimorficas que determinam os elementos de uma lista:
+elem:: a -> [a] -> Bool
+elem -[] = false		//Caso base
+elem e (x::xs)			//Se for igual, encontrou o elemento
+|	e == x = True
+|	otherwise = elem e xs
+
+//Quicksort em Haskell
+quick:: [a] -> [a]
+quick [] = []
+quick (x:xs) = quick [y |y <- xs, y<x] ++[x] ++ quick[y|y<-xs, y>=x]	//ou de outro jeito: ++x:(quick[y|y<-xs, y>=x])
+
+[Empty, Node 1 Empty Empty, Node 2 Empty Empty]	//tipo árvore(Tree)
+
+Mecanismo pra fazer sobrecarga de operadores
+Ex)
+f::color -> Int e f:: tree Int -> Int 
+f Blue = 0
+f Red = 1
+f Green = 2
+
+solucao:	//Polimorfismo sobrecarregando a linguagem
+class F a where
+	f:: a -> int
+instance F color where f Blue = 0
+		.
+		.
+		.
+
+Instancia de igualdade
+data Tree a = Empty | Node a (Tree a) (Tree a)
+instance Eq a => Eq(Tree a) where
+	(==) Empty Empty = True
+	(==) Empty _ = false
+	(==) _ Empty = false
+	(==) (Node x1 t1 t2) (Node x2 t3 t4)
+	| x1 == x2 && t1 == t3 && t2 == t4
+
+derivação automática
+=====================
+Classes de tipos Functores
+
+map:: (a-> b) ->[a] -> [b]
+fmap:: (a -> b) -> f a -> f b
+instance Functor[] where
+	fmap = map
+
+-----------------------------------------
+
+instance Functor Tree where
+	fmap:: (a->b)->True a ->True b
+	fmap f Empty = Empty
+	fmap f (Node x t1 t2) = Node (fx) (fmap f t1) (fmap f t2)
+
+exemplo "A ideia de Functores"
+t:			5					10
+	      /   \			==>    /  \
+	(t1) 3     7(t2)      	  b    6    14
+		(Num a =: a-> a)
+		fmap (*2) t
+~ Node 10 (fmap (*2) t1) (fmap (*2) t2)
+~ Node 10 (Node 6 (fmap (*2) Empty) (fmap (*2) Empty)) ...
+
+Brincando com Functores
+(exemplo)
+	a = fmap(*)[1..5]
+    Int->Int
+~ (*1):fmap * [2..5]
+	.
+	.
+	.
+a =  [(*1),(*2),(*3),(*4),(*5)]
+fmap(\f -> fa) a
+~ [9,18,27,36,45]
+
+instance Functor Maybe where
+	fmap:: (a->b) -> Maybe a -> Maybe b
+	fmap f Nothing = Nothing
+	fmap f (Just x) = Just (f x)
+fmap(+) (Just 3)
+~ Just (+3)
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
++-------------------------------+
+|	Aula (16-05-2019)			|
++-------------------------------+
+
+Classes de tipos Applicative
+
+instance Applicative Maybe where
+	fmap:: (a->b) -> Maybe a -> Maybe b
+	fmap f Nothing = Nothing
+	fmap f (Just x) = Just (f x)
+	pure:: a -> Maybe a				//"a" retorna Maybe de a
+	pure x = Just x
+	<*>::Maybe (a->b) -> Maybe a -> Maybe b				//Função encapsulada no Maybe
+	<*> Nothing	_ = Nothing								//Construtor quando Nothing ==> Independente do outro valor, esta é uma situação de erro
+	<*> _ Nothing = Nothing
+	<*> (Just f) (Just x) = Just (f x)					//f::a->b(Em cima de Just f) x::a(Em cima do Just x) Situação de "não erro" => retorna Just (f x)
+	pure (+) <*> Just 3 <*> Just 7						//Como resultado só de pure (+) tem Just(+), o resultado de "pure (+) <*> Just 3" é "Just(3+)"
+														//e o resultado de toda a expressão é "Just(10)"
+	pure (+) <*> Just 3 <*> Nothing						//É encapsulado o Nothing
+	
+	
+	Just 3 + Just 7 = Just 10 			//Não é possível "somar", então a solução é "pure(+) <*> Just 3 <*> Just 7"
+	Just 3 * Just 7 = Just 21 			//Não é possível "multiplicar", então a solução é "pure(*) <*> Just 3 <*> Just 7"
+	Just 21 / Just 7 = Just 3 			//Não é possível "dividir", então a solução é "pure(/) <*> Just 3 <*> Just 7"
+	
+"Faça o construtor de lista ser uma instancia de applicative?"
+
+instance Applicative [] where						//Definição de Applicative pra lista
+								//Implementando o fmap
+	fmap::(a->b) ->[a]->[b]		//Retorna a lista dos resultados
+	fmap = map
+	pure:: a ->[a]
+	pure x = [x] 										//lista "mínima"
+	<*>::[a->b]->[a]->[b]								//São funções encapsuladas => pega a lista de funções e recebe a lista de a e retorna uma lista de b
+	<*> fs xs = [f x | f <- fs, x <- xs]				//Cada função de f aplicada a cada elemento de x
+	
+	
+	Exemplo:
+	[(1+), (2*)] <*> [1,2,3]
+	[2,3,4,2,4,6]
+	
+	[(+), (*)] <*> [1..3] <*> [1,2]			//[(+), (*)] <*> [1,2,3]	=>[(1+),(2+),(3+),(1*),(1*),(1*)] <*> [1,2] 
+	[2,3,3,4,4,5,1,2,2,4,3,6]
+	
+Exemplo de mapeamento com applicative:
+(+) <*>	Just 3 <*> Just 7			//Uma função tem que ta dentro do maybe encaixotada
+
+(+) <$> Just 3 <*> Just 7			//Um operador <$> pra não ficar escrevendo o pure toda vez	==>Essa função é basicamente o fmap só que em forma de operador
+
+=========
+fun:: Int -> Maybe String
+fun x = Just ("Number " ++ show x)
+fun <*> Just 5						//Erro sintático por não estar encapsulado no Maybe
+
+pure fun <*> Just 5					//resultado: Just (Just "Number 5")
+			// pure fun => Just(fun)		Esperaria um Maybe(Int->b) <*> Maybe Int ~Maybe b
+			//::Maybe (Int -> Maybe String)
+
+==========
+Monad ajuda a fazer um sequenciamento de operações
+
+Exemplo:	Maybe pra Monad
+
+instance Monad Maybe where
+	return = pure
+	fail | _ = Nothing
+	(>>=):: Maybe a -> (a -> Maybe b) -> Maybe b	//Retorna algo dentro do contexto, ou seja o Maybe b
+	(>>=) Nothing _ = Nothing						//Situação de erro
+	(>>=) (Just x) f = f x
+	
+Com Lista:
+
+instance Monad [] where
+	return = pure
+	fail | _ = []
+	(>>=):: [a] -> (a -> [b]) -> [b]
+	(>>=) xs f = concat[f x | x <- xs]		//concat pega todos os elementos e junta em uma lista
+	
+[1,2,3] >>= return	//[[1],[2],[3]]:: [[Int]] //Lista de listas -- Função return => retorna lista
+
+Exemplo:
+	fun x = Just ("Number " ++ show x)
+	Just 5 >>= fun		//Just "Number 5"
+	
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
++-------------------------------+
+|	Aula (21-05-2019)			|
++-------------------------------+
+
+"Programa que lê a quantidade de caracteres"
+
+//show - faz a concatenação de strings
+
+:{
+count = do
+	putStrLn "Digite o seu nome"
+	name <- getLine
+	putStrLn ("Seu nome tem: " ++ show(length name) ++ " caracteres")
+:}
+
+putStrLn "Greetings !" >> (getLine >>= (\name -> putStrLn("Welcome to Haskell!!!")))	//Usando monad
+
+Acertar Casamento de padrão na notação do e "tolerância" a falhas para: (x::xs) <- Just "Olá"
+
+Noção de Estado:
+
+data Stack a = Stack [a] deriving (Show,Eq)
+push:: a ->Stack a -> ((), Stack a)		
+push x (Stack xs) = ((), Stack x:xs)
+pop:: Stack a -> (a, Stack a)
+pop (Stack (x:xs)) = (x, Stack xs)
+
+f s = push 5 snd(pop(snd(push 3 s)))	//snd - pega o segundo elemento
+
+data State s a = State (Stack s -> (a, Stack s))
+
+Instanciando o conceito de estado com Monad
+exemplo:
+data State s a
+instance Monad (State S) where			//Tipo parametrico com 2 valores
+	return:: a -> State s a
+	return x = State(\s -> (x, s))
+	>>=::State s a ->(a -> State s b) -> State s b	//Fazendo o sequenciamento == Pega o retorno que a pilha teve e o estado representa um par
+	(State h) >>= f = State (\s' -> h s')	//h::Stack s -> (a, Stack s)
+	f (fst (h s'))
+
+OBS: Pode haver o problema de não conseguir sair da Monad
+
+*************************************************
+*					 							*
+*	Trabalho vai envolver Entrada e Saída		*
+*					 							*
+*************************************************
