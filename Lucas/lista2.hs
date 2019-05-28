@@ -79,7 +79,7 @@ length2 l = sum (map (\x -> 1) l)     -- map (\x -> 1) l => Substitui os element
 --	O efeito esperado em map addOne (map addOne xs) é de incrementar a lista em duas unidades em cada elemento da lista xs, um incremento no primeiro
 --	no primeiro MAP e um segundo incremento no segundo map.
 --	Sim, a propriedade seria que após a execução da operação g na lista xs será executada a operação f na lista gerada pela operação g, 
---	assim retornando uma lista resultante.
+--	assim retornando uma lista resultante.são
 
 --	Exercício 8:
 --	mystery xs = foldr (++) [] (map sing xs)              --	Seja (I)=(map sing xs) e (II)=foldr (++) [] (I) e sing x = [xs]

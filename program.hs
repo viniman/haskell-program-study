@@ -408,3 +408,146 @@ todos_pares [x] | (mod x 2 == 0) = True
 todos_pares (x:xs)
 	| (mod x 2 /= 0) = False
 	| otherwise = todos_pares xs
+
+firstThat :: (a -> Bool) -> a -> [a] -> a
+firstThat f = foldr (\x acc -> if f x then x else acc)
+
+lastThat :: (a -> Bool) -> a -> [a] -> a
+lastThat f  = foldl (\acc x -> if f x then x else acc) 
+
+-- foldr e foldl
+-- acc = acumulador
+-- x = elemento atual
+
+argmax :: (Ord b) => (a -> b) -> [a] -> a
+argmax f [x] = x
+argmax f (x:xs) = if f x > f (argmax f xs)
+				  then x
+				  else (argmax f xs)
+
+argmax' :: (Ord b) => (a -> b) -> [a] -> a
+argmax' f = foldl1(\acc x -> if f x > f acc then x else acc)
+
+-- map ((1+) . (1+) . (1+)) [1..4]
+
+
+-- WHERE CLAUSE
+roots :: (Float, Float, Float) -> (Float, Float)  
+roots (a,b,c) = (x1, x2) where 
+   x1 = e + sqrt d / (2 * a) 
+   x2 = e - sqrt d / (2 * a) 
+   d = b * b - 4 * a * c  
+   e = - b / (2 * a)  
+main = do 
+   putStrLn "The roots of our Polynomial equation are:" 
+   print (roots(1,-8,6))
+
+
+numSolsReaisEq2Grau :: Float -> Float -> Float -> Int
+numSolsReaisEq2Grau a b c
+    | delta > 0  = 2
+    | delta == 0 = 1
+    | otherwise = 0
+        where
+        delta = b^2 - 4*a*c
+
+dobrarLista :: (Num a) => [a] -> [a]
+dobrarLista list = map dobro list
+	where dobro x = x*2
+
+dobrarListaLet :: (Num a) => [a] -> [a]
+dobrarListaLet list =
+	let dobro x = x*2
+	in map dobro list
+
+multby10 :: [Float] -> [Float]
+multby10 list = map mult list
+	where mult x = x*10
+
+herao :: Float -> Float -> Float -> Float
+herao a b c = sqrt (s * (s - a) * (s - b) * (s - c))
+    where
+    s = (a + b + c) / 2
+
+areaTriangTrig :: Float -> Float -> Float -> Float
+areaTriangTrig  a b c = c * altura / 2   -- usando trigonometria
+    where
+    cosa    = (b ^ 2 + c ^ 2 - a ^ 2) / (2 * b * c)
+    sina    = sqrt (1 - cosa ^ 2)
+    altura  = b * sina
+
+areaTriangHerao :: Float -> Float -> Float -> Float
+areaTriangHerao a b c = resultado        -- usa a fórmula de Herão
+    where
+    resultado = sqrt (p * (p - a) * (p - b) * (p - c))
+    p       = (a + b + c) / 2
+
+
+-- Pontos creditados a um piloto de acordo com sua classificacao final
+pts :: Int -> Int
+pts x =
+    if x == 1
+        then 10
+        else if x == 2
+            then 6
+            else if x == 3
+                then 4
+                else if x == 4
+                    then 3
+                    else if x == 5
+                        then 2
+                        else if x == 6
+                            then 1
+                            else 0
+
+
+ptsFacilLegivel :: Int -> Int
+ptsFacilLegivel 1 = 10
+ptsFacilLegivel 2 = 6
+ptsFacilLegivel 3 = 4
+ptsFacilLegivel 4 = 3
+ptsFacilLegivel 5 = 2
+ptsFacilLegivel 6 = 1
+ptsFacilLegivel _ = 0
+
+
+ptsGuardas :: Int -> Int
+ptsGuardas x
+	| x == 1 = 10
+	| x == 2 = 6
+	| x == 3 = 4
+	| x == 4 = 3
+	| x == 5 = 2
+	| x == 6 = 1
+	| otherwise = 0
+
+
+-- misturar casamento de padrao e guardas
+ptsOutro :: Int -> Int
+ptsOutro 1 = 10
+ptsOutro 2 = 6
+ptsOutro x
+    | x <= 6    = 7 - x
+    | otherwise = 0
+
+
+-- Associacoes let
+-- where é: <expressões> where <associações>
+-- let <associações> in <expressões>
+
+solucaoPadrao :: Float -> Float -> Float -> (Float, Float)
+solucaoPadrao a b c = 
+    ( (-b + sqrt(b * b - 4 * a * c)) / (2 * a)
+    , (-b - sqrt(b * b - 4 * a * c)) / (2 * a) )
+
+solucaoWhere :: Float -> Float -> Float -> (Float, Float)
+solucaoWhere a b c = 
+    ( (-b + raizDelta) / (2 * a)
+    , (-b - raizDelta) / (2 * a) )
+        where raizDelta = sqrt(b * b - 4 * a * c)
+
+solucaoLet :: Float -> Float -> Float -> (Float, Float)
+solucaoLet a b c =
+    let raizDelta = sqrt(b * b - 4 * a * c)
+    in  ( (-b + raizDelta) / (2 * a)
+        , (-b - raizDelta) / (2 * a) )
