@@ -124,5 +124,20 @@ isTautology f = foldr (\bs acc -> acc && eval (Association $ (variables f) `zip`
 replace :: Eq a => a -> a -> [a] -> [a]
 replace x y xs = foldr (\xi ys -> if xi == x then y:ys else xi:ys) [] xs
 
-count :: Eq a => [a] -> [(Int, a)]
-count xs = foldr (\x acc -> if (_,x) `elem` acc then ()) [] xs
+
+
+--11.
+data Tree a = Tree a [Tree a] deriving Show
+
+--(a)
+height :: (Tree a) -> Int
+height (Tree x []) = 0
+height (Tree x children) = 1 + maximum (map height children)
+
+--(b)
+rootChildren :: (Tree a) -> Int
+rootChildren (Tree x children) = length children
+
+--(c)
+instance Functor Tree where
+  fmap f (Tree x children) = Tree (f x) (foldr (\c acc -> (fmap f c):acc) [] children)
