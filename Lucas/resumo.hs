@@ -85,11 +85,29 @@
 --		foldr (/) 64 [4,2]    => 2/64   --	2/64 = 0.03125‬, 4/0.03125‬ = 128.0 
 --		foldr (+) 5 [1,2,3,4] => 15     --	5+4 = 9, 9+3 = 12, 12+2 = 14, 14+1 = 15
 --		foldr (/) 2 [8,12,24,4]	=>      --	4/2 = 2, 24/2 = 12, 12/12 = 1, 8/1 = 8.0
+--		foldr (++)[] [[1],[2],[3]] => [1,2,3]  --	[3]++[] = [3], [2]++[3] = [2,3], [1]++[2,3] => [1,2,3]
 
 --	7) sum:
 --		Soma os elementos de uma lista
 --	Exemplo:
 --		sum [1..5] => 15
+
+--	8) product:
+--		Gera o produto de todos os elementos da lista
+--	Exemplo:
+--		product [1..3] => 6
+
+--	OUTRAS:
+
+--	1) succ:
+--		Retorna o sucessor do elemento digitado
+--	Exemplo:
+--		succ 8 => 9
+
+--	2) pred:
+--		Retorna o antecessor do elemento digitado
+--	Exemplo:
+--		pred 8 => 7
 
 --	OPERAÇÕES BASICAS
 --	Soma:
@@ -372,10 +390,10 @@ somaLista (x:xs) = x + somaLista(xs)	--	'x' é a cabeça da lista e 'xs' o resta
 --     _        -> putStrLn "ExArgumentoInvalido"
 
 
--- LISTA DE EXERCICIOS 2
--- Implementação merge :: [a] -> [a] -> [a]
-merge::[a]->[a]->[a]
---merge x:xs y:ys 
+--	FUNÇÕES COMPOSTAS:
+--		É utilizado o operador '.' para estabelecer a composição de funções.
+--	Exemplo: foo = (4*) . (10+)    --	Composição entre a função de soma e multiplicação
+--			 foo 5 => 60           --	4*(10+5) = 60
 
 
 

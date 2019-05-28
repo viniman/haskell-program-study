@@ -248,9 +248,10 @@ instance Applicative [] where						//Definição de Applicative pra lista
 	[2,3,3,4,4,5,1,2,2,4,3,6]
 	
 Exemplo de mapeamento com applicative:
-(+) <*>	Just 3 <*> Just 7			//Uma função tem que ta dentro do maybe encaixotada
+(+) <*>	Just 3 <*> Just 7			--	Uma função tem que ta dentro do maybe encaixotada, gera erro nesse caso. O correto é "pure (+) <*> Just 3 <*> Just 7" => Just 10
 
-(+) <$> Just 3 <*> Just 7			//Um operador <$> pra não ficar escrevendo o pure toda vez	==>Essa função é basicamente o fmap só que em forma de operador
+(+) <$> Just 3 <*> Just 7  			--	(Resultado: Just 10)Um operador <$> pra não ficar escrevendo o pure toda vez ==> 
+									--	Essa função é basicamente o fmap só que em forma de operador
 
 =========
 fun:: Int -> Maybe String
